@@ -1,4 +1,4 @@
-version: "3.1"
+version: "3.8"
 
 services:
   db-microservices:
@@ -12,13 +12,14 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - pgdata-microservices-1:/var/lib/postgresql/data
+      - pgdata-microservices-last-1:/var/lib/postgresql/data
       - ./database:/docker-entrypoint-initdb.d
 
   nats-server:
     image: nats:latest
     ports:
       - "8222:8222"
+      - "4222:4222"
 
   client-gateway:
     build: ./client-gateway
@@ -43,17 +44,17 @@ services:
       - NATS_SERVERS=nats://nats-server:4222
       - DATABASE_URL=postgresql://msuser:mspassword@db-microservices:5432/microservicesdb
 
-#  orders-ms:
-#    depends_on:
-#      - db-ms-orders
-#    build: ./ms-orders
-#    volumes:
-#      - ./ms-orders/src:/usr/src/app/src
-#    command: npm run start:dev
-#    environment:
-#      - PORT=3002
-#      - NATS_SERVERS=nats://nats-server:4222
-#      - DATABASE_URL=postgresql://msorders:mypassword@db-ms-orders:5432/ordersdb
+  orders-ms:
+    depends_on:
+      - db-microservices
+    build: ./ms-orders
+    volumes:
+      - ./ms-orders/src:/usr/src/app/src
+    command: npm run start:dev
+    environment:
+      - PORT=3002
+      - NATS_SERVERS=nats://nats-server:4222
+      - DATABASE_URL=postgresql://msuser:mspassword@db-microservices:5432/microservicesdb
 
   auth-ms:
     depends_on:
@@ -63,11 +64,11 @@ services:
       - ./ms-auth/src:/usr/src/app/src
     command: npm run start:dev
     environment:
-      - PORT=3004
+      - PORT=3003
       - NATS_SERVERS=nats://nats-server:4222
       - JWT_SECRET=secret
       - DATABASE_URL=postgresql://msuser:mspassword@db-microservices:5432/microservicesdb
 
 volumes:
-  pgdata-microservices-1:
+  pgdata-microservices-last-1:
   

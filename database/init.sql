@@ -16,18 +16,11 @@ CREATE TABLE IF NOT EXISTS public."User" (
 	CONSTRAINT "User_pkey" PRIMARY KEY (id)
 );
 
-DO $$
-BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'OrderStatus') THEN
-    CREATE TYPE "OrderStatus" AS ENUM ('PENDING', 'DELIVERED', 'CANCELLED', 'PAID');
-  END IF;
-END$$;
-
 CREATE TABLE IF NOT EXISTS public."Order" (
 	id text NOT NULL,
 	"totalAmount" float8 NOT NULL,
 	"totalItems" int4 NOT NULL,
-	status public."OrderStatus" DEFAULT 'PENDING'::"OrderStatus" NOT NULL,
+	status text DEFAULT 'PENDING' NOT NULL,
 	paid bool DEFAULT false NOT NULL,
 	"paidAt" timestamp(3) NULL,
 	"createdAt" timestamp(3) DEFAULT CURRENT_TIMESTAMP NOT NULL,
