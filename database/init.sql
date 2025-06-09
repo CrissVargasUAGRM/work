@@ -26,6 +26,8 @@ CREATE TABLE IF NOT EXISTS public."Order" (
 	"createdAt" timestamp(3) DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	"updatedAt" timestamp(3) NOT NULL,
 	"stripeChargeId" text NULL,
+	userId int4 DEFAULT 1 NOT NULL,
+	clientId int4 DEFAULT 1 NOT NULL,
 	CONSTRAINT "Order_pkey" PRIMARY KEY (id)
 );
 
