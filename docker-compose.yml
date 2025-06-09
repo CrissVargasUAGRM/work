@@ -12,7 +12,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - pgdata-microservices-last-1:/var/lib/postgresql/data
+      - pgdata-microservices-last-new:/var/lib/postgresql/data
       - ./database:/docker-entrypoint-initdb.d
 
   nats-server:
@@ -20,18 +20,18 @@ services:
     ports:
       - "8222:8222"
       - "4222:4222"
-#
-#  client-gateway:
-#    build: ./client-gateway
-#    ports:
-#      - "3000:3000"
-#    volumes:
-#      - ./client-gateway/src:/usr/src/app/src
-#    command: npm run start:dev
-#    environment:
-#      - PORT=3000
-#      - NATS_SERVERS=nats://nats-server:4222
-#
+
+  client-gateway:
+    build: ./client-gateway
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./client-gateway/src:/usr/src/app/src
+    command: npm run start:dev
+    environment:
+      - PORT=3000
+      - NATS_SERVERS=nats://nats-server:4222
+
   product-ms:
     depends_on: 
       - db-microservices
@@ -43,19 +43,19 @@ services:
       - PORT=3001
       - NATS_SERVERS=nats://nats-server:4222
       - DATABASE_URL=postgresql://msuser:mspassword@db-microservices:5432/microservicesdb
-#
-#  orders-ms:
-#    depends_on:
-#      - db-microservices
-#    build: ./ms-orders
-#    volumes:
-#      - ./ms-orders/src:/usr/src/app/src
-#    command: npm run start:dev
-#    environment:
-#      - PORT=3002
-#      - NATS_SERVERS=nats://nats-server:4222
-#      - DATABASE_URL=postgresql://msuser:mspassword@db-microservices:5432/microservicesdb
-#
+
+  orders-ms:
+    depends_on:
+      - db-microservices
+    build: ./ms-orders
+    volumes:
+      - ./ms-orders/src:/usr/src/app/src
+    command: npm run start:dev
+    environment:
+      - PORT=3002
+      - NATS_SERVERS=nats://nats-server:4222
+      - DATABASE_URL=postgresql://msuser:mspassword@db-microservices:5432/microservicesdb
+
   auth-ms:
     depends_on:
       - db-microservices
@@ -70,5 +70,5 @@ services:
       - DATABASE_URL=postgresql://msuser:mspassword@db-microservices:5432/microservicesdb
 
 volumes:
-  pgdata-microservices-last-1:
+  pgdata-microservices-last-new:
   
