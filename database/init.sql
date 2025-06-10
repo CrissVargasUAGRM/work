@@ -50,3 +50,14 @@ CREATE TABLE IF NOT EXISTS public."OrderReceipt" (
 	CONSTRAINT "OrderReceipt_pkey" PRIMARY KEY (id),
 	CONSTRAINT "OrderReceipt_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES public."Order"(id) ON DELETE RESTRICT ON UPDATE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS public."Payment" (
+	id serial4 NOT NULL,
+	clientId int4 DEFAULT(1) NOT NULL,
+	userId int4 DEFAULT(1) NOT NULL,
+	"orderId" text NOT NULL,
+	"amount" float8 NOT NULL,
+	"createdAt" timestamp(3) DEFAULT CURRENT_TIMESTAMP NULL,
+	"updatedAt" timestamp(3) DEFAULT CURRENT_TIMESTAMP NULL,
+	constraint "Payment_pkey" primary key (id)
+);

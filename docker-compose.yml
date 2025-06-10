@@ -69,6 +69,18 @@ services:
       - JWT_SECRET=secret
       - DATABASE_URL=postgresql://msuser:mspassword@db-microservices:5432/microservicesdb
 
+  payments-ms:
+    depends_on:
+      - db-microservices
+    build: ./ms-payments
+    volumes:
+      - ./ms-auth/src:/usr/src/app/src
+    command: npm run start:dev
+    environment:
+      - PORT=3003
+      - NATS_SERVERS=nats://nats-server:4222
+      - DATABASE_URL=postgresql://msuser:mspassword@db-microservices:5432/microservicesdb
+
 volumes:
   pgdata-microservices-last-new:
   
